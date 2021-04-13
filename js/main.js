@@ -1,19 +1,19 @@
 
+let winPositions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+
+    [0, 4, 8],
+    [2, 4, 6],
+]
 
 class Player {
     
-    winPositions = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-    
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-    
-        [0, 4, 8],
-        [2, 4, 6],
-    ]
     positions = [];
     score = 0;
     
@@ -26,8 +26,8 @@ class Player {
         }
     }
     isWin() {
-        for(let i = 0; i < this.winPositions.length; i++) {
-            let newArr = this.positions.filter(item => this.winPositions[i].indexOf(item) !== -1);
+        for(let i = 0; i < winPositions.length; i++) {
+            let newArr = this.positions.filter(item => winPositions[i].indexOf(item) !== -1);
             if (newArr.length >= 3) {
                 return true;
             }
@@ -82,7 +82,7 @@ boxes.forEach((box, index) => {
         obj = isX ? x : o;
         //Check if the current player is `X` or `O`
         if (isX) {
-            if (playingWithPc) mainOverlay.style.display = "block";
+            //if (playingWithPc) mainOverlay.style.display = "block";
             this.innerHTML = `<div class="x-element">X</div>`;
         } else {
             mainOverlay.style.display = "none";
@@ -114,10 +114,37 @@ boxes.forEach((box, index) => {
     });
 });
 function runPC() {
-    
+    let indexes = [];
+    for(let i = 0; i < winPositions.length; i++) {
+        let newArr = x.positions.filter(item => winPositions[i].indexOf(item) !== -1);
+        if (newArr.length === 2) {
+            indexes.push(i);
+        }
+    }
+
+    if (indexes.length > 0) {
+        for (let i = 0; i < indexes.length; i++) {
+            let index = winPositions[indexes[i]].filter(item => !boxesIndex.includes(item));
+            let ele = boxes[index];
+            if (ele == undefined) {
+                addToRandomIndex();
+                break;
+            } else {
+                if (ele.children.length === 0) {
+                    ele.click();
+                    break;
+                }
+            }
+        }
+    } else {
+        addToRandomIndex();
+    }
+}
+
+function addToRandomIndex() {
     let randomBox = Math.floor(Math.random() * boxes.length);
     if (boxesIndex.includes(randomBox) && !gameIsOver) {// if this element has value
-        runPC();
+        addToRandomIndex();
     } else {
         let ele = boxes[randomBox];
         ele.click();
