@@ -82,7 +82,7 @@ boxes.forEach((box, index) => {
         obj = isX ? x : o;
         //Check if the current player is `X` or `O`
         if (isX) {
-            //if (playingWithPc) mainOverlay.style.display = "block";
+            if (playingWithPc) mainOverlay.style.display = "block";
             this.innerHTML = `<div class="x-element">X</div>`;
         } else {
             mainOverlay.style.display = "none";
@@ -126,16 +126,14 @@ function runPC() {
         for (let i = 0; i < indexes.length; i++) {
             let index = winPositions[indexes[i]].filter(item => !boxesIndex.includes(item));
             let ele = boxes[index];
-            if (ele == undefined) {
-                addToRandomIndex();
-                break;
-            } else {
+            if (ele != undefined) {
                 if (ele.children.length === 0) {
                     ele.click();
-                    break;
+                    return;
                 }
             }
         }
+        addToRandomIndex();
     } else {
         addToRandomIndex();
     }
